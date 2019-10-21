@@ -1,0 +1,54 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+from scipy import fftpack
+from scipy import signal
+
+f_s = 8500
+t = np.linspace(0, 2, 2 * f_s, endpoint=False)
+
+a1 = 5 # 2-5
+f1 = 60 #20-60
+x1 = a1 * np.sin(f1 * 2 * np.pi * t)
+
+a2 = 10 #7-10
+f2 = 240 #150-240
+x2 = a2 * np.sin(f2 * 2 * np.pi * t)
+
+a3 = 15 #12-15
+f3 = 900 #700-900
+x3 = a3 * np.sin(f3 * 2 * np.pi * t)
+
+x_t = x1 + x2 + x3
+
+x_fft = fftpack.fft(x_t)
+freqs = fftpack.fftfreq(len(x_t)) * f_s
+
+plt.figure()
+#plt.plot(t, x_t)
+#plt.stem(freqs, np.abs(x_fft), use_line_collection=True)
+#plt.xlim(0, 4300)
+
+
+
+
+fs = 8500       # Sample rate, Hz
+cutoff = 100    # Desired cutoff frequency, Hz
+trans_width = 75  # Width of transition from pass band to stop band, Hz
+numtaps = 400      # Size of the FIR filter.
+taps = signal.remez(numtaps, [0, cutoff, cutoff + trans_width, 0.5*fs], [1, 0], Hz=fs)
+w, h = signal.freqz(taps, [1], worN=1024)
+remez_filter = 0.5*fs*w/np.pi
+remez_y = 20*np.log10(np.abs(h))
+#plt.plot(remez_filter, remez_y)
+
+filtered = signal.convolve(x_t, remez_filter, mode='same')
+filter_fft = fftpack.fft(filtered)
+filter_freqs = fftpack.fftfreq(len(filtered)) * fs
+plt.stem(filter_freqs, np.abs(filter_fft), use_line_collection=True)
+plt.xlim(0, 4300)
+
+#plt.plot(filtered, remez_y)
+
+
+plt.show()
