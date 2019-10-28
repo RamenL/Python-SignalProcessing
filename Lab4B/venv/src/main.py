@@ -29,8 +29,6 @@ plt.figure()
 #plt.stem(freqs, np.abs(x_fft), use_line_collection=True) #part 2
 #plt.xlim(0, 4300)
 
-
-
 fs = 8500       # Sample rate, Hz
 cutoff = 100    # Desired cutoff frequency, Hz
 trans_width = 75  # Width of transition from pass band to stop band, Hz
@@ -51,9 +49,8 @@ filter_freqs = fftpack.fftfreq(len(remez_filter)) * fs
 
 convolve_fft = fftpack.fft(filtered)
 convolve_freqs = fftpack.fftfreq(len(filtered)) * fs
-plt.stem(convolve_freqs, np.abs(convolve_fft), use_line_collection=True)
-plt.xlim(-150, 4300) #part 6
-
+#plt.stem(convolve_freqs, np.abs(convolve_fft), use_line_collection=True)
+#plt.xlim(-150, 4300) #part 6
 
 
 plt.show()
